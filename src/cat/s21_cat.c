@@ -13,8 +13,8 @@ int main(int argc, char* argv[]) {
   int i;
   while ((string[i] = fgetc(fp)) != EOF) {
     if (string[i] == '\n') {
-      string[i] = '$';
-      string[i + 1] = '\0';
+      // string[i] = '$';
+      string[i] = '\0';
       printf("%s\n", string);
       i = 0;
     } else
@@ -22,3 +22,5 @@ int main(int argc, char* argv[]) {
   }
   return argc;
 }
+
+int check_fullname_flags() 
