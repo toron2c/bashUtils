@@ -1,13 +1,13 @@
 #include "s21_cat.h"
 
 #include <stdio.h>
+#include <stdlib.h>
 #include <string.h>
-
 int main(int argc, char* argv[]) {
   for (int i = 0; i < argc; i++) {
     printf("\nargv[%d] \t = %s\t length = %ld\n", i, argv[i], strlen(argv[i]));
   }
-  int error =
+  int error_flags =
       1;  // 1 - нет ошибок, 0 ошибка, прерывание программы, не читать файл
 
   info_flags t_flags;
@@ -17,18 +17,17 @@ int main(int argc, char* argv[]) {
       if (strlen(argv[i]) >= 2) {
         if (*++argv[i] == '-') {
           argv[i]++;
-          error = check_fullname_flags(argv[i], &t_flags);
+          error_flags = check_fullname_flags(argv[i], &t_flags);
         } else {
-          error = check_flags(argv[i], &t_flags);
+          error_flags = check_flags(argv[i], &t_flags);
         }
       }
     }
   }
-
   int size = 0;
   FILE* fp;
-  printf("\n%d\n", error);
-  if (error == 1) {
+  printf("\n%d\n", error_flags);
+  if (error_flags == 1) {
     for (int i = 1; i < argc; i++) {
       fp = fopen(argv[i], "r");
       if (fp != NULL) {
@@ -38,8 +37,9 @@ int main(int argc, char* argv[]) {
       }
     }
   }
+  printf("%d - size\n", size);
   // fp = fopen(argv[3], "r");
-  char tmp_str = calloc(size, sizeof(char));
+  // char* tmp_str = calloc(size, sizeof(char));
 
   // // блок кода считающий общее количество символов в файле, будет
   // повторяться,
@@ -125,3 +125,14 @@ void init_flags(info_flags* t_flags) {
   t_flags->flag_s = 0;
   t_flags->flag_t = 0;
 }
+
+void check_e(char* str) {
+  for (size_t i = 0; i < strlen(str); i++) {
+    if (str[i] == '\0') {
+      str[i] = '$';
+      str[i + 1] = '\0';
+    }
+  }
+}
+
+void check_b
