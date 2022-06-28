@@ -13,7 +13,7 @@ int main(int argc, char* argv[]) {
   info_flags t_flags;
   init_flags(&t_flags);
   for (int i = 0; i < argc; i++) {
-    if ((*argv[i] == '-')) {
+    if (*argv[i] == '-') {
       if (strlen(argv[i]) >= 2) {
         if (*++argv[i] == '-') {
           argv[i]++;
@@ -29,11 +29,8 @@ int main(int argc, char* argv[]) {
   printf("\n%d\n", error_flags);
   if (error_flags == 1) {
     for (int i = 1; i < argc; i++) {
-      fp = fopen(argv[i], "r");
-      if (fp != NULL) {
-        fseek(fp, 0, SEEK_END);
-        size = ftell(fp);
-        fseek(fp, 0, SEEK_SET);
+      size = get_size_file(argv[i]);
+      if (size > 0) {
       }
     }
   }
@@ -126,13 +123,34 @@ void init_flags(info_flags* t_flags) {
   t_flags->flag_t = 0;
 }
 
-void check_e(char* str) {
+void action_flag_e(char* str) {
   for (size_t i = 0; i < strlen(str); i++) {
-    if (str[i] == '\0') {
+    if (str[i] == '\n') {
       str[i] = '$';
-      str[i + 1] = '\0';
+      str[i + 1] = '\n';
     }
   }
 }
 
-void check_b
+int get_size_file(char* src) {
+  int size = 0;
+  FILE* file = fopen(src, "r");
+  if (file != NULL) {
+    fseek(file, 0, SEEK_END);
+    size = ftell(file);
+    fclose(file);
+  }
+  return size;
+}
+
+void read_file(char* src, int size, info_flags t_flags) {
+  FILE* file = fopen(src, "r");
+  char* str = calloc(size + 1, sizeof(char));
+  char* prev_str = calloc(size + 1, sizeof(char));
+  fgets(prev_str, size, file);
+  while ((fgets(str, size, file)) != NULL) {
+    if (t_flags.flag_s) {
+      action
+    }
+  }
+}

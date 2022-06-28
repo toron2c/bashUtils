@@ -15,6 +15,10 @@ int check_fullname_flags(char *str, info_flags *t_flags);
 
 void init_flags(info_flags *t_flags);  // инициализация структуры
 
-void check_e(char *str);
+int get_size_file(char *src);
+
+void read_file(char *src, int size, info_flags t_flags);
+
+void action_flag_e(char *str);
 
 #endif  // _SRC_CAT_
