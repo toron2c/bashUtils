@@ -1,6 +1,6 @@
 #ifndef _SRC_CAT_
 #define _SRC_CAT_
-#include <stdio.h>
+
 typedef struct {
   int flag_v;  // 5
   int flag_b;  //нумерует непустые строки 3
@@ -17,10 +17,12 @@ void init_flags(info_flags *t_flags);  // инициализация струк�
 
 int get_size_file(char *src);
 
+int action_flag_s(char *str, char *prev_str);
+
+void action_flag_n(char *str, int counter);
+
+void *s21_insert(const char *src, const char *str, int start_index);
+
 void read_file(char *src, int size, info_flags t_flags);
-
-// void action_flag_e(char *str);
-
-void action_flag_s(char *str, char *prev_str);
 
 #endif  // _SRC_CAT_

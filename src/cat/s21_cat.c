@@ -26,7 +26,6 @@ int main(int argc, char* argv[]) {
   }
   int size = 0;
   FILE* fp;
-  printf("\n%d\n", error_flags);
   if (error_flags == 1) {
     for (int i = 1; i < argc; i++) {
       size = get_size_file(argv[i]);
@@ -148,20 +147,54 @@ void read_file(char* src, int size, info_flags t_flags) {
   FILE* file = fopen(src, "r");
   char* str = calloc(size + 1, sizeof(char));
   char* prev_str = calloc(size + 1, sizeof(char));
-  fgets(prev_str, size, file);
-  int i = 0;
-  int j = 0;
+  int counter = 1;
   while ((fgets(str, size, file)) != NULL) {
-    if (t_flags.flag_s) {
+    if (t_flags.flag_s && action_flag_s(str, prev_str)) {
+      strcpy(prev_str, str);
+      continue;
     }
-    if (!strcmp(str, "\n")) {
-      printf("Finded 0 str = %d\tIteration = %d\n", i, j);
-      printf("%s\n", str);
-      i++;
+    if (t_flags.flag_n) {
+      action_flag_n(str, counter);
     }
+    printf("%s", str);
     strcpy(prev_str, str);
-    j++;
+    counter++;
   }
 }
 
-// void action_flag_s(char* str, char* prev_str) {}
+int action_flag_s(char* str, char* prev_str) {
+  int flag = 0;
+  if (prev_str[0] == '\n' && str[0] == '\n') {
+    flag = 1;
+  }
+  return flag;
+}
+void action_flag_n(char* str, int counter) {
+  char* p_this_counter = calloc(10, sizeof(char));
+  sprintf(p_this_counter, "%d\t", counter);
+  char* new_str = s21_insert(str, p_this_counter, 0);
+  strcpy(str, new_str);
+  free(p_this_counter);
+  free(new_str);
+}
+
+void* s21_insert(const char* src, const char* str, int start_index) {
+  int length_src = strlen(src);
+  int length_str = strlen(str);
+  int i = 0;
+  char* new_string = calloc(length_src + length_str + 1, sizeof(char));
+  int indx_str = 0;
+  if (new_string) {
+    for (; i < length_src + length_str; i++) {
+      if (i == start_index) {
+        strcat(new_string, str);
+        i += length_str - 1;
+        continue;
+      }
+      new_string[i] = src[indx_str];
+      indx_str++;
+    }
+    new_string[i] = '\0';
+  }
+  return new_string;
+}
