@@ -31,6 +31,7 @@ int main(int argc, char* argv[]) {
     for (int i = 1; i < argc; i++) {
       size = get_size_file(argv[i]);
       if (size > 0) {
+        read_file(argv[i], size, t_flags);
       }
     }
   }
@@ -148,9 +149,19 @@ void read_file(char* src, int size, info_flags t_flags) {
   char* str = calloc(size + 1, sizeof(char));
   char* prev_str = calloc(size + 1, sizeof(char));
   fgets(prev_str, size, file);
+  int i = 0;
+  int j = 0;
   while ((fgets(str, size, file)) != NULL) {
     if (t_flags.flag_s) {
-      action
     }
+    if (!strcmp(str, "\n")) {
+      printf("Finded 0 str = %d\tIteration = %d\n", i, j);
+      printf("%s\n", str);
+      i++;
+    }
+    strcpy(prev_str, str);
+    j++;
   }
 }
+
+// void action_flag_s(char* str, char* prev_str) {}
