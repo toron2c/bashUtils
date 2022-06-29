@@ -30,7 +30,7 @@ int main(int argc, char* argv[]) {
     for (int i = 1; i < argc; i++) {
       size = get_size_file(argv[i]);
       if (size > 0) {
-        read_file(argv[i], size, t_flags);
+        read_file(argv[i], t_flags);
       }
     }
   }
@@ -143,58 +143,69 @@ int get_size_file(char* src) {
   return size;
 }
 
-void read_file(char* src, int size, info_flags t_flags) {
+void read_file(char* src, info_flags t_flags) {
   FILE* file = fopen(src, "r");
-  char* str = calloc(size + 1, sizeof(char));
-  char* prev_str = calloc(size + 1, sizeof(char));
-  int counter = 1;
-  while ((fgets(str, size, file)) != NULL) {
-    if (t_flags.flag_s && action_flag_s(str, prev_str)) {
-      strcpy(prev_str, str);
+  char prev_c = ' ';
+  char prev_prev_c = ' ';
+  char current_c;
+  int counter_line = 1;
+  int start_line = -1;
+  int counter_without_void = 1;
+  while ((current_c = fgetc(file)) != EOF) {
+    if ((t_flags.flag_s) && (action_flag_s(prev_c, prev_prev_c, current_c))) {
       continue;
     }
-    if (t_flags.flag_n) {
-      action_flag_n(str, counter);
+    if ((t_flags.flag_n && start_line) ||
+        ((t_flags.flag_n == 1) && (start_line == -1))) {
+      write_number_line(counter_line);
     }
-    printf("%s", str);
-    strcpy(prev_str, str);
-    counter++;
+
+    if ((t_flags.flag_b) && (action_flag_b(current_c, prev_c))) {
+      if (start_line) write_number_line(counter_without_void);
+    }
+    if ((t_flags.flag_e) && check_flag_e(current_c)) wryte_symbol_end();
+    printf("%c", current_c);
+    prev_prev_c = prev_c;
+    prev_c = current_c;
+
+    start_line = check_start_line(prev_c, prev_prev_c, &counter_line,
+                                  &counter_without_void);
   }
 }
 
-int action_flag_s(char* str, char* prev_str) {
+int action_flag_s(char prev_c, char prev_prev_c, char current_c) {
   int flag = 0;
-  if (prev_str[0] == '\n' && str[0] == '\n') {
+  if (prev_c == '\n' && prev_prev_c == '\n' && current_c == '\n') {
     flag = 1;
   }
   return flag;
 }
-void action_flag_n(char* str, int counter) {
-  char* p_this_counter = calloc(10, sizeof(char));
-  sprintf(p_this_counter, "%d\t", counter);
-  char* new_str = s21_insert(str, p_this_counter, 0);
-  strcpy(str, new_str);
-  free(p_this_counter);
-  free(new_str);
+
+int check_start_line(char c, char prev_c, int* counter_line,
+                     int* counter_without_void) {
+  int flag = 0;
+  if (c == '\n') {
+    flag = 1;
+    *counter_line = *counter_line + 1;
+    if (prev_c != '\n') *counter_without_void = *counter_without_void + 1;
+  }
+  return flag;
 }
 
-void* s21_insert(const char* src, const char* str, int start_index) {
-  int length_src = strlen(src);
-  int length_str = strlen(str);
-  int i = 0;
-  char* new_string = calloc(length_src + length_str + 1, sizeof(char));
-  int indx_str = 0;
-  if (new_string) {
-    for (; i < length_src + length_str; i++) {
-      if (i == start_index) {
-        strcat(new_string, str);
-        i += length_str - 1;
-        continue;
-      }
-      new_string[i] = src[indx_str];
-      indx_str++;
-    }
-    new_string[i] = '\0';
+int action_flag_b(char current, char prev) {
+  int flag = 1;
+  if ((current == '\n') && (prev == '\n')) {
+    flag = 0;
   }
-  return new_string;
+  return flag;
+}
+
+void write_number_line(int counter) { printf("%6d\t", counter); }
+
+void wryte_symbol_end() { printf("$"); }
+
+int check_flag_e(char c) {
+  int flag = 0;
+  if (c == '\n') flag = 1;
+  return flag;
 }

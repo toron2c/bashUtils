@@ -17,12 +17,23 @@ void init_flags(info_flags *t_flags);  // инициализация струк�
 
 int get_size_file(char *src);
 
-int action_flag_s(char *str, char *prev_str);
+void read_file(char *src, info_flags t_flags);
+
+void wryte_symbol_end();
+
+int check_flag_e(char c);
+
+int action_flag_s(char prev_c, char prev_prev_c, char current_c);
 
 void action_flag_n(char *str, int counter);
 
-void *s21_insert(const char *src, const char *str, int start_index);
+int action_flag_b(char current, char prev);
 
-void read_file(char *src, int size, info_flags t_flags);
+int check_start_line(char c, char prev_c, int *counter_line,
+                     int *counter_without_void);
+
+void write_number_line(int counter);
+
+void *s21_insert(const char *src, const char *str, int start_index);
 
 #endif  // _SRC_CAT_
