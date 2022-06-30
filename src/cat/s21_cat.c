@@ -3,6 +3,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+
 int main(int argc, char* argv[]) {
   for (int i = 0; i < argc; i++) {
     printf("\nargv[%d] \t = %s\t length = %ld\n", i, argv[i], strlen(argv[i]));
@@ -34,34 +35,6 @@ int main(int argc, char* argv[]) {
       }
     }
   }
-  printf("%d - size\n", size);
-  // fp = fopen(argv[3], "r");
-  // char* tmp_str = calloc(size, sizeof(char));
-
-  // // блок кода считающий общее количество символов в файле, будет
-  // повторяться,
-  // // возможно следует вынести в src/common
-  // // скорее всего так же будет проверять аргумент на то файл это или нет
-
-  // fseek(fp, 0, SEEK_END);
-
-  // int sz = ftell(fp);
-
-  // printf("\n%d\n", sz);
-
-  // fseek(fp, 0, SEEK_SET);
-  // ==
-
-  // char string[5000];
-  // int i;
-  // while ((string[i] = fgetc(fp)) != EOF) {
-  //   if (string[i] == '\n') {
-  //     string[i] = '\0';
-  //     printf("%s\n", string);
-  //     i = 0;
-  //   } else
-  //     i++;
-  // }
   return argc;
 }
 
@@ -163,7 +136,17 @@ void read_file(char* src, info_flags t_flags) {
     if ((t_flags.flag_b) && (action_flag_b(current_c, prev_c))) {
       if (start_line) write_number_line(counter_without_void);
     }
-    if ((t_flags.flag_e) && check_flag_e(current_c)) wryte_symbol_end();
+    if ((t_flags.flag_e) && check_flag_e(current_c)) write_symbol_end();
+
+    if ((t_flags.flag_v) && check_flag_v(current_c))
+      write_unprintable_symbol(current_c);
+
+    if ((t_flags.flag_t) && check_flag_t(current_c)) {
+      write_symbol_tab();
+      prev_prev_c = prev_c;
+      prev_c = current_c;
+      continue;
+    }
     printf("%c", current_c);
     prev_prev_c = prev_c;
     prev_c = current_c;
@@ -202,10 +185,18 @@ int action_flag_b(char current, char prev) {
 
 void write_number_line(int counter) { printf("%6d\t", counter); }
 
-void wryte_symbol_end() { printf("$"); }
+void write_symbol_end() { printf("$"); }
 
 int check_flag_e(char c) {
   int flag = 0;
   if (c == '\n') flag = 1;
   return flag;
 }
+
+int check_flag_t(char c) {
+  int flag = 0;
+  if (c == '\t') flag = 1;
+  return flag;
+}
+
+void write_symbol_tab() { printf("^I"); }

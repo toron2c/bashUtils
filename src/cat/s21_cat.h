@@ -19,9 +19,13 @@ int get_size_file(char *src);
 
 void read_file(char *src, info_flags t_flags);
 
-void wryte_symbol_end();
+void write_symbol_end();
 
 int check_flag_e(char c);
+
+int check_flag_t(char c);
+
+void write_symbol_tab();
 
 int action_flag_s(char prev_c, char prev_prev_c, char current_c);
 
