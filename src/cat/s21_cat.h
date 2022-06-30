@@ -17,6 +17,8 @@ void init_flags(info_flags *t_flags);  // инициализация струк�
 
 int get_size_file(char *src);
 
+void action_flags(char *str, char *prev_str, int counter, info_flags t_flags);
+
 int action_flag_s(char *str, char *prev_str);
 
 void action_flag_n(char *str, int counter);

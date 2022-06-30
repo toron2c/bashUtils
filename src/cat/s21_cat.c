@@ -147,23 +147,28 @@ void read_file(char* src, int size, info_flags t_flags) {
   FILE* file = fopen(src, "r");
   char* str = calloc(size + 1, sizeof(char));
   char* prev_str = calloc(size + 1, sizeof(char));
-  int counter = 1;
-  while ((fgets(str, size, file)) != NULL) {
-    if (t_flags.flag_s && action_flag_s(str, prev_str)) {
+  int counter_line = 1;
+  for (int i = 0; str[i] = fgetc(file) != EOF; i++) {
+    if (str[i] == '\n') {
+      action_flags(str, prev_str, counter_line, t_flags);
       strcpy(prev_str, str);
-      continue;
+      i = 0;
     }
-    if (t_flags.flag_n) {
-      action_flag_n(str, counter);
-    }
-    printf("%s", str);
-    strcpy(prev_str, str);
-    counter++;
+  }
+}
+
+void action_flags(char* str, char* prev_str, int counter, info_flags t_flags) {
+  int flag_no_print = 0;
+  printf("%s\n%s\n", str, prev_str);
+  if ((t_flags.flag_s) && (action_flag_s(str, prev_str))) {
+    flag_no_print = 1;
+    printf("-stroka\n");
   }
 }
 
 int action_flag_s(char* str, char* prev_str) {
   int flag = 0;
+
   if (prev_str[0] == '\n' && str[0] == '\n') {
     flag = 1;
   }
