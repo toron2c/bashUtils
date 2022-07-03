@@ -8,6 +8,7 @@ int main(int argc, char* argv[]) {
   for (int i = 0; i < argc; i++) {
     printf("\nargv[%d] \t = %s\t length = %ld\n", i, argv[i], strlen(argv[i]));
   }
+
   int error_flags =
       1;  // 1 - нет ошибок, 0 ошибка, прерывание программы, не читать файл
 
@@ -24,6 +25,9 @@ int main(int argc, char* argv[]) {
         }
       }
     }
+  }
+  if ((t_flags.flag_n) && (t_flags.flag_b)) {
+    t_flags.flag_n = 0;
   }
   int size = 0;
   FILE* fp;
@@ -138,13 +142,21 @@ void read_file(char* src, info_flags t_flags) {
     }
     if ((t_flags.flag_e) && check_flag_e(current_c)) write_symbol_end();
 
-    if ((t_flags.flag_v) && check_flag_v(current_c))
+    if ((t_flags.flag_v) && check_flag_v(current_c)) {
       write_unprintable_symbol(current_c);
+      prev_prev_c = prev_c;
+      prev_c = current_c;
+      start_line = check_start_line(prev_c, prev_prev_c, &counter_line,
+                                    &counter_without_void);
+      continue;
+    }
 
     if ((t_flags.flag_t) && check_flag_t(current_c)) {
       write_symbol_tab();
       prev_prev_c = prev_c;
       prev_c = current_c;
+      start_line = check_start_line(prev_c, prev_prev_c, &counter_line,
+                                    &counter_without_void);
       continue;
     }
     printf("%c", current_c);
@@ -191,6 +203,22 @@ int check_flag_e(char c) {
   int flag = 0;
   if (c == '\n') flag = 1;
   return flag;
+}
+
+int check_flag_v(char c) {
+  int flag = 0;
+  if ((c <= 8) || (c >= 11 && c <= 31) || (c >= 127 && c <= 159)) {
+    flag = 1;
+  }
+  return flag;
+}
+
+void write_unprintable_symbol(char c) {
+  int number_nonprint_symbol = 0;
+  if ((c <= 8) || (c >= 11 && c <= 31) || (c >= 127 && c <= 159)) {
+    number_nonprint_symbol = c;
+  }
+  printf("%s", special_symbol[number_nonprint_symbol]);
 }
 
 int check_flag_t(char c) {

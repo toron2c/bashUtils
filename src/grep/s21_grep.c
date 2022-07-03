@@ -17,6 +17,9 @@ int main(int argc, char* argv[]) {
         error_flags = check_flags(argv[i], &flags);
       }
   }
+  if (error_flags) {
+    //работа програма
+    if (e) }
   // функция проверки зависимостей проверяет условия
 
   return (0);
@@ -37,7 +40,7 @@ void init_flags(grep_flags* flags) {
 
 int check_flags(char* argv, grep_flags* flags) {
   int result = 1;
-  for (int i = 0; i < strlen(argv); i++) {
+  for (size_t i = 0; i < strlen(argv); i++) {
     if (argv[i] == 'e')
       continue;
     else if (argv[i] == 'i')
