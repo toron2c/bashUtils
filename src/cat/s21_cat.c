@@ -13,7 +13,7 @@ int main(int argc, char* argv[]) {
       1;  // 1 - нет ошибок, 0 ошибка, прерывание программы, не читать файл
 
   info_flags t_flags;
-  init_flags(&t_flags);
+  t_flags = (info_flags){};
   for (int i = 0; i < argc; i++) {
     if (*argv[i] == '-') {
       if (strlen(argv[i]) >= 2) {
@@ -89,15 +89,6 @@ int check_flags(char* str, info_flags* t_flags) {
     }
   }
   return result;
-}
-
-void init_flags(info_flags* t_flags) {
-  t_flags->flag_b = 0;
-  t_flags->flag_e = 0;
-  t_flags->flag_v = 0;
-  t_flags->flag_n = 0;
-  t_flags->flag_s = 0;
-  t_flags->flag_t = 0;
 }
 
 void action_flag_e(char* str) {

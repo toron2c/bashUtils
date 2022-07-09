@@ -55,8 +55,6 @@ typedef struct {
 int check_flags(char *str, info_flags *t_flags);
 int check_fullname_flags(char *str, info_flags *t_flags);
 
-void init_flags(info_flags *t_flags);  // инициализация структуры
-
 int get_size_file(char *src);
 
 void read_file(char *src, info_flags t_flags);
