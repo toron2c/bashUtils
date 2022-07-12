@@ -65,9 +65,9 @@ int check_flag_e(char c);
 
 int check_flag_t(char c);
 
-int check_flag_v(char c);
+int check_flag_v(char symbol);
 
-void write_unprintable_symbol(char c);
+void write_unprintable_symbol(char symbol);
 
 void write_symbol_tab();
 

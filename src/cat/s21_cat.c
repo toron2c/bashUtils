@@ -5,15 +5,16 @@
 #include <string.h>
 
 int main(int argc, char* argv[]) {
-  for (int i = 0; i < argc; i++) {
-    printf("\nargv[%d] \t = %s\t length = %ld\n", i, argv[i], strlen(argv[i]));
-  }
+  // for (int i = 0; i < argc; i++) {
+  //   printf("\nargv[%d] \t = %s\t length = %ld\n", i, argv[i],
+  //   strlen(argv[i]));
+  // }
 
   int error_flags =
       1;  // 1 - нет ошибок, 0 ошибка, прерывание программы, не читать файл
 
   info_flags t_flags;
-  t_flags = (info_flags){};
+  t_flags = (info_flags){0, 0, 0, 0, 0, 0};
   for (int i = 0; i < argc; i++) {
     if (*argv[i] == '-') {
       if (strlen(argv[i]) >= 2) {
@@ -30,7 +31,6 @@ int main(int argc, char* argv[]) {
     t_flags.flag_n = 0;
   }
   int size = 0;
-  FILE* fp;
   if (error_flags == 1) {
     for (int i = 1; i < argc; i++) {
       size = get_size_file(argv[i]);
@@ -98,17 +98,6 @@ void action_flag_e(char* str) {
       str[i + 1] = '\n';
     }
   }
-}
-
-int get_size_file(char* src) {
-  int size = 0;
-  FILE* file = fopen(src, "r");
-  if (file != NULL) {
-    fseek(file, 0, SEEK_END);
-    size = ftell(file);
-    fclose(file);
-  }
-  return size;
 }
 
 void read_file(char* src, info_flags t_flags) {
@@ -196,16 +185,18 @@ int check_flag_e(char c) {
   return flag;
 }
 
-int check_flag_v(char c) {
+int check_flag_v(char symbol) {
   int flag = 0;
+  unsigned char c = symbol;
   if ((c <= 8) || (c >= 11 && c <= 31) || (c >= 127 && c <= 159)) {
     flag = 1;
   }
   return flag;
 }
 
-void write_unprintable_symbol(char c) {
+void write_unprintable_symbol(char symbol) {
   int number_nonprint_symbol = 0;
+  unsigned char c = symbol;
   if ((c <= 8) || (c >= 11 && c <= 31) || (c >= 127 && c <= 159)) {
     number_nonprint_symbol = c;
   }
